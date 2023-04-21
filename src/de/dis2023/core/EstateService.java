@@ -1,9 +1,6 @@
 package de.dis2023.core;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -39,23 +36,29 @@ public class EstateService {
 	public EstateService() {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
 	}
-	
+
+	/**
+	 * Updates a detached object in the DB with hibernate
+	 * @param obj The instance to be updated
+	 */
+	public void updateInstance(Object obj) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.update(obj);
+		session.getTransaction().commit();
+	}
+
 	/**
 	 * Find an estate agent with the given id
 	 * @param id The ID of the agent
 	 * @return Agent with ID or null
 	 */
 	public EstateAgent getEstateAgentByID(int id) {
-		Iterator<EstateAgent> it = estateAgents.iterator();
-
-		while(it.hasNext()) {
-			EstateAgent m = it.next();
-			
-			if(m.getId() == id)
-				return m;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		EstateAgent m = (EstateAgent) session.get(EstateAgent.class, id);
+		session.getTransaction().commit();
+		return m;
 	}
 	
 	/**
@@ -64,24 +67,25 @@ public class EstateService {
 	 * @return Estate agent with the given ID or null
 	 */
 	public EstateAgent getEstateAgentByLogin(String login) {
-		Iterator<EstateAgent> it = estateAgents.iterator();
-		
-		while(it.hasNext()) {
-			EstateAgent m = it.next();
-			
-			if(m.getLogin().equals(login))
-				return m;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		String hql = "from estateagent as agent where agent.login = :a_login";
+		EstateAgent m = (EstateAgent) session.createQuery(hql).setParameter("a_login", login).uniqueResult();
+		session.getTransaction().commit();
+		return m;
 	}
 	
 	/**
 	 * Returns all estateAgents
 	 */
 	public Set<EstateAgent> getAllEstateAgents() {
-		//query
-		return estateAgents;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		String hql = "from estateagent";
+		List<EstateAgent> agents = (List<EstateAgent>) session.createQuery(hql).list();
+		Set<EstateAgent> agentsSet = new HashSet<>(agents);
+		session.getTransaction().commit();
+		return agentsSet;
 	}
 	
 	/**
@@ -90,16 +94,11 @@ public class EstateService {
 	 * @return Person with ID or null
 	 */
 	public Person getPersonById(int id) {
-		Iterator<Person> it = persons.iterator();
-		
-		while(it.hasNext()) {
-			Person p = it.next();
-			
-			if(p.getId() == id)
-				return p;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Person p = (Person) session.get(Person.class, id);
+		session.getTransaction().commit();
+		return p;
 	}
 	
 	/**
@@ -107,20 +106,20 @@ public class EstateService {
 	 * @param ea The estate agent
 	 */
 	public void addEstateAgent(EstateAgent ea) {
-		//estateAgents.add(ea);
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		//try saveOrUpdate() function
 		session.save(ea);
 		session.getTransaction().commit();
-		session.close();
 	}
 	/**
 	 * Deletes an estate agent
 	 * @param ea The estate agent
 	 */
 	public void deleteEstateAgent(EstateAgent ea) {
-		estateAgents.remove(ea);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete(ea);
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -128,14 +127,23 @@ public class EstateService {
 	 * @param p The person
 	 */
 	public void addPerson(Person p) {
-		persons.add(p);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save(p);
+		session.getTransaction().commit();
 	}
 	
 	/**
 	 * Returns all persons
 	 */
 	public Set<Person> getAllPersons() {
-		return persons;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		String hql = "from person";
+		List<Person> ret = (List<Person>) session.createQuery(hql).list();
+		Set<Person> personSet = new HashSet<>(ret);
+		session.getTransaction().commit();
+		return personSet;
 	}
 	
 	/**
@@ -143,7 +151,10 @@ public class EstateService {
 	 * @param p The person
 	 */
 	public void deletePerson(Person p) {
-		persons.remove(p);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete(p);
+		session.getTransaction().commit();
 	}
 	
 	/**

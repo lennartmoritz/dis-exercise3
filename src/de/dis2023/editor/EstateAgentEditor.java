@@ -99,6 +99,9 @@ public class EstateAgentEditor {
 				m.setLogin(new_login);
 			if(!new_password.equals(""))
 				m.setPassword(new_password);
+
+			// Update the detached object in hibernate
+			service.updateInstance(m);
 		}
 	}
 	
