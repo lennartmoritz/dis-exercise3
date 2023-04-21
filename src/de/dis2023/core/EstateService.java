@@ -47,7 +47,7 @@ public class EstateService {
 	 */
 	public EstateAgent getEstateAgentByID(int id) {
 		Iterator<EstateAgent> it = estateAgents.iterator();
-		
+
 		while(it.hasNext()) {
 			EstateAgent m = it.next();
 			
@@ -80,6 +80,7 @@ public class EstateService {
 	 * Returns all estateAgents
 	 */
 	public Set<EstateAgent> getAllEstateAgents() {
+		//query
 		return estateAgents;
 	}
 	
@@ -106,9 +107,14 @@ public class EstateService {
 	 * @param ea The estate agent
 	 */
 	public void addEstateAgent(EstateAgent ea) {
-		estateAgents.add(ea);
+		//estateAgents.add(ea);
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		//try saveOrUpdate() function
+		session.save(ea);
+		session.getTransaction().commit();
+		session.close();
 	}
-	
 	/**
 	 * Deletes an estate agent
 	 * @param ea The estate agent
