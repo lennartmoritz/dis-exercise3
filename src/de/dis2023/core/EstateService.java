@@ -81,7 +81,7 @@ public class EstateService {
 	public Set<EstateAgent> getAllEstateAgents() {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		String hql = "from estateagent";
+		String hql = "from EstateAgent";
 		List<EstateAgent> agents = (List<EstateAgent>) session.createQuery(hql).list();
 		Set<EstateAgent> agentsSet = new HashSet<>(agents);
 		session.getTransaction().commit();
