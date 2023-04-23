@@ -69,7 +69,7 @@ public class EstateService {
 	public EstateAgent getEstateAgentByLogin(String login) {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		String hql = "from estateagent as agent where agent.login = :a_login";
+		String hql = "from EstateAgent as agent where agent.login = :a_login";
 		EstateAgent m = (EstateAgent) session.createQuery(hql).setParameter("a_login", login).uniqueResult();
 		session.getTransaction().commit();
 		return m;
@@ -139,7 +139,7 @@ public class EstateService {
 	public Set<Person> getAllPersons() {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
-		String hql = "from person";
+		String hql = "from Person";
 		List<Person> ret = (List<Person>) session.createQuery(hql).list();
 		Set<Person> personSet = new HashSet<>(ret);
 		session.getTransaction().commit();
