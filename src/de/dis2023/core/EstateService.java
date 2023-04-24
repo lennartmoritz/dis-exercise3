@@ -174,7 +174,6 @@ public class EstateService {
 	 * @return All houses managed by the estate agent
 	 */
 	public Set<House> getAllHousesForEstateAgent(EstateAgent ea) {
-		//from house select * where ea.getId()= house.manager
 		Set<House> houses = new HashSet<>();
 		for (Estate estate : ea.getEstates()) {
 			if (estate instanceof House) {
@@ -183,24 +182,6 @@ public class EstateService {
 		}
 		return houses;
 	}
-		/*Session session = sessionFactory.getCurrentSession();
-		session.beginTransaction();
-		String hql = "from House as house where house.manager = :manager";
-		List<House> houses = (List<House>) session.createQuery(hql).setParameter("manager", ea).list();
-		Set<House> houseSet = new HashSet<>(houses);
-		session.getTransaction().commit();
-		return houseSet;*/
-		/*Iterator<House> it = houses.iterator();
-		
-		while(it.hasNext()) {
-			House h = it.next();
-			
-			if(h.getManager().equals(ea))
-				ret.add(h);
-		}
-		
-		return ret;
-		 */
 	
 	/**
 	 * Find a house with a given ID
@@ -243,17 +224,13 @@ public class EstateService {
 	 * @return All apartments managed by the estate agent
 	 */
 	public Set<Apartment> getAllApartmentsForEstateAgent(EstateAgent ea) {
-		Set<Apartment> ret = new HashSet<Apartment>();
-		Iterator<Apartment> it = apartments.iterator();
-		
-		while(it.hasNext()) {
-			Apartment w = it.next();
-			
-			if(w.getManager().equals(ea))
-				ret.add(w);
+		Set<Apartment> apartments = new HashSet<>();
+		for (Estate estate : ea.getEstates()) {
+			if (estate instanceof Apartment) {
+				apartments.add((Apartment) estate);
+			}
 		}
-		
-		return ret;
+		return apartments;
 	}
 	
 	/**
@@ -335,17 +312,14 @@ public class EstateService {
 	 * @return All contracts belonging to apartments managed by the estate agent
 	 */
 	public Set<TenancyContract> getAllTenancyContractsForEstateAgent(EstateAgent ea) {
-		Set<TenancyContract> ret = new HashSet<TenancyContract>();
-		Iterator<TenancyContract> it = tenancyContracts.iterator();
-		
-		while(it.hasNext()) {
-			TenancyContract v = it.next();
-			
-			if(v.getApartment().getManager().equals(ea))
-				ret.add(v);
-		}
-		
-		return ret;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		String hql = "Select tc from TenancyContract tc JOIN Apartment ap on tc.apartment_id = a.id where ap.manager = :m_id";
+		/*String hql = "Select pc from purchasecontract pc JOIN house h on pc.house_id = h.id where h.manager = :m_id";*/
+		List<TenancyContract> ret = (List<TenancyContract>) session.createQuery(hql).setParameter("m_id", ea.getId()).list();
+		session.getTransaction().commit();
+		Set<TenancyContract> contractSet = new HashSet<>(ret);
+		return contractSet;
 	}
 	
 	/**
@@ -354,7 +328,14 @@ public class EstateService {
 	 * @return All purchase contracts belonging to houses managed by the given estate agent
 	 */
 	public Set<PurchaseContract> getAllPurchaseContractsForEstateAgent(EstateAgent ea) {
-		Set<PurchaseContract> ret = new HashSet<PurchaseContract>();
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		String hql = "Select pc from purchasecontract pc JOIN house h on pc.house_id = h.id where h.manager = :m_id";
+		List<PurchaseContract> ret = (List<PurchaseContract>) session.createQuery(hql).setParameter("m_id", ea.getId()).list();
+		session.getTransaction().commit();
+		Set<PurchaseContract> contractSet = new HashSet<>(ret);
+		return contractSet;
+		/*Set<PurchaseContract> ret = new HashSet<PurchaseContract>();
 		Iterator<PurchaseContract> it = purchaseContracts.iterator();
 		
 		while(it.hasNext()) {
@@ -364,7 +345,7 @@ public class EstateService {
 				ret.add(k);
 		}
 		
-		return ret;
+		return ret;*/
 	}
 	
 	/**
