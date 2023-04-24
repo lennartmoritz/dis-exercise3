@@ -12,7 +12,7 @@
 		<property name="login" type="string" column="login" />
 		<property name="password" type="string" column="password" />
 		
-		<set name="estates" inverse="true">
+		<set name="estates" inverse="true" lazy="false">
 			<key column="manager" />
 			<one-to-many class="de.dis2023.data.Estate" />
 		</set>
