@@ -15,14 +15,14 @@
         <union-subclass name="de.dis2023.data.PurchaseContract" table="purchasecontract">
             <property name="noOfInstallments" type="integer" column="noOfInstallments" />
             <property name="intrestRate" type="integer" column="intrestRate" />
-            <many-to-one name="house" class="de.dis2023.data.House" column="house" not-null="true" />
+            <one-to-one name="house" foreign-key="id" class="de.dis2023.data.House"/>
         </union-subclass>
 
         <union-subclass name="de.dis2023.data.TenancyContract" table="tenancycontract">
             <property name="startDate" type="date" column="startDate" />
             <property name="duration" type="integer" column="duration" />
             <property name="additionalCosts" type="integer" column="additionalCosts" />
-            <many-to-one name="apartment" class="de.dis2023.data.Apartment" column="apartment" not-null="true" />
+            <one-to-one name="apartment" foreign-key="id" class="de.dis2023.data.Apartment" />
         </union-subclass>
     </class>
 </hibernate-mapping>
