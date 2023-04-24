@@ -162,7 +162,10 @@ public class EstateService {
 	 * @param h The house
 	 */
 	public void addHouse(House h) {
-		houses.add(h);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save(h);
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -171,8 +174,15 @@ public class EstateService {
 	 * @return All houses managed by the estate agent
 	 */
 	public Set<House> getAllHousesForEstateAgent(EstateAgent ea) {
-		Set<House> ret = new HashSet<House>();
-		Iterator<House> it = houses.iterator();
+		//from house select * where ea.getId()= house.manager
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		String hql = "from House as house where house.manager = :manager";
+		List<House> houses = (List<House>) session.createQuery(hql).setParameter("manager", ea).list();
+		Set<House> houseSet = new HashSet<>(houses);
+		session.getTransaction().commit();
+		return houseSet;
+		/*Iterator<House> it = houses.iterator();
 		
 		while(it.hasNext()) {
 			House h = it.next();
@@ -182,6 +192,7 @@ public class EstateService {
 		}
 		
 		return ret;
+		 */
 	}
 	
 	/**
