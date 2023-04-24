@@ -151,6 +151,7 @@ public class EstateEditor {
 				h.setPrice(newPrice);
 			
 			h.setGarden(newGarden);
+			service.updateInstance(h);
 		}
 	}
 	
