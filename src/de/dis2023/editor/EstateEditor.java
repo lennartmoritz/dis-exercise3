@@ -248,6 +248,7 @@ public class EstateEditor {
 			
 			w.setKitchen(newEbk);
 			w.setBalcony(newBalcony);
+			service.updateInstance(w);
 		}
 	}
 	
