@@ -175,13 +175,21 @@ public class EstateService {
 	 */
 	public Set<House> getAllHousesForEstateAgent(EstateAgent ea) {
 		//from house select * where ea.getId()= house.manager
-		Session session = sessionFactory.getCurrentSession();
+		Set<House> houses = new HashSet<>();
+		for (Estate estate : ea.getEstates()) {
+			if (estate instanceof House) {
+				houses.add((House) estate);
+			}
+		}
+		return houses;
+	}
+		/*Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		String hql = "from House as house where house.manager = :manager";
 		List<House> houses = (List<House>) session.createQuery(hql).setParameter("manager", ea).list();
 		Set<House> houseSet = new HashSet<>(houses);
 		session.getTransaction().commit();
-		return houseSet;
+		return houseSet;*/
 		/*Iterator<House> it = houses.iterator();
 		
 		while(it.hasNext()) {
@@ -193,7 +201,6 @@ public class EstateService {
 		
 		return ret;
 		 */
-	}
 	
 	/**
 	 * Find a house with a given ID
