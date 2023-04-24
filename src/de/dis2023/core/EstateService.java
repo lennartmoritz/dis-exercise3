@@ -190,16 +190,11 @@ public class EstateService {
 	 * @return The house or null if not found
 	 */
 	public House getHouseById(int id) {
-		Iterator<House> it = houses.iterator();
-		
-		while(it.hasNext()) {
-			House h = it.next();
-			
-			if(h.getId() == id)
-				return h;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		House h = (House) session.get(House.class, id);
+		session.getTransaction().commit();
+		return h;
 	}
 	
 	/**
@@ -207,7 +202,10 @@ public class EstateService {
 	 * @param h The house
 	 */
 	public void deleteHouse(House h) {
-		houses.remove(h);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete(h);
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -215,7 +213,10 @@ public class EstateService {
 	 * @param w the aparment
 	 */
 	public void addApartment(Apartment w) {
-		apartments.add(w);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save(w);
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -243,16 +244,11 @@ public class EstateService {
 	 * @return The apartment or zero, if not found
 	 */
 	public Apartment getApartmentByID(int id) {
-		Iterator<Apartment> it = apartments.iterator();
-		
-		while(it.hasNext()) {
-			Apartment w = it.next();
-			
-			if(w.getId() == id)
-				return w;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Apartment a = (Apartment) session.get(Apartment.class, id);
+		session.getTransaction().commit();
+		return a;
 	}
 	
 	/**
@@ -260,7 +256,10 @@ public class EstateService {
 	 * @param p The apartment
 	 */
 	public void deleteApartment(Apartment w) {
-		apartments.remove(w);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete(w);
+		session.getTransaction().commit();
 	}
 	
 	
@@ -269,7 +268,10 @@ public class EstateService {
 	 * @param t The tenancy contract
 	 */
 	public void addTenancyContract(TenancyContract t) {
-		tenancyContracts.add(t);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save(t);
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -277,7 +279,10 @@ public class EstateService {
 	 * @param p The purchase contract
 	 */
 	public void addPurchaseContract(PurchaseContract p) {
-		purchaseContracts.add(p);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save(p);
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -286,16 +291,11 @@ public class EstateService {
 	 * @return The tenancy contract or zero if not found
 	 */
 	public TenancyContract getTenancyContractByID(int id) {
-		Iterator<TenancyContract> it = tenancyContracts.iterator();
-		
-		while(it.hasNext()) {
-			TenancyContract m = it.next();
-			
-			if(m.getId() == id)
-				return m;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		TenancyContract c = (TenancyContract) session.get(TenancyContract.class, id);
+		session.getTransaction().commit();
+		return c;
 	}
 	
 	/**
@@ -304,16 +304,11 @@ public class EstateService {
 	 * @return The purchase contract or null if not found
 	 */
 	public PurchaseContract getPurchaseContractById(int id) {
-		Iterator<PurchaseContract> it = purchaseContracts.iterator();
-		
-		while(it.hasNext()) {
-			PurchaseContract k = it.next();
-			
-			if(k.getId() == id)
-				return k;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		PurchaseContract c = (PurchaseContract) session.get(PurchaseContract.class, id);
+		session.getTransaction().commit();
+		return c;
 	}
 	
 	/**
@@ -398,7 +393,10 @@ public class EstateService {
 	 * @param tc the tenancy contract
 	 */
 	public void deleteTenancyContract(TenancyContract tc) {
-		apartments.remove(tc);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete(tc);
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -406,7 +404,10 @@ public class EstateService {
 	 * @param tc the purchase contract
 	 */
 	public void deletePurchaseContract(PurchaseContract pc) {
-		apartments.remove(pc);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete(pc);
+		session.getTransaction().commit();
 	}
 	
 	/**
