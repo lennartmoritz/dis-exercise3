@@ -48,6 +48,13 @@ public class EstateService {
 		session.getTransaction().commit();
 	}
 
+	public void refreshInstance(Object obj) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.refresh(obj);
+		session.getTransaction().commit();
+	}
+
 	/**
 	 * Find an estate agent with the given id
 	 * @param id The ID of the agent
@@ -175,6 +182,7 @@ public class EstateService {
 	 */
 	public Set<House> getAllHousesForEstateAgent(EstateAgent ea) {
 		Set<House> houses = new HashSet<>();
+		refreshInstance(ea);
 		for (Estate estate : ea.getEstates()) {
 			if (estate instanceof House) {
 				houses.add((House) estate);
@@ -225,6 +233,7 @@ public class EstateService {
 	 */
 	public Set<Apartment> getAllApartmentsForEstateAgent(EstateAgent ea) {
 		Set<Apartment> apartments = new HashSet<>();
+		refreshInstance(ea);
 		for (Estate estate : ea.getEstates()) {
 			if (estate instanceof Apartment) {
 				apartments.add((Apartment) estate);
