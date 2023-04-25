@@ -174,14 +174,6 @@ public class EstateService {
 	 * @return All houses managed by the estate agent
 	 */
 	public Set<House> getAllHousesForEstateAgent(EstateAgent ea) {
-		Session session = sessionFactory.getCurrentSession();
-		session.beginTransaction();
-		String hql = "from House as house where house.manager = :manager";
-		List<House> houses = (List<House>) session.createQuery(hql).setParameter("manager", ea).list();
-		Set<House> houseSet = new HashSet<>(houses);
-		session.getTransaction().commit();
-		return houseSet;
-		/*hat damit nicht funktioniert :/
 		Set<House> houses = new HashSet<>();
 		for (Estate estate : ea.getEstates()) {
 			if (estate instanceof House) {
@@ -189,8 +181,6 @@ public class EstateService {
 			}
 		}
 		return houses;
-		*/
-
 	}
 	
 	/**
@@ -234,22 +224,13 @@ public class EstateService {
 	 * @return All apartments managed by the estate agent
 	 */
 	public Set<Apartment> getAllApartmentsForEstateAgent(EstateAgent ea) {
-		Session session = sessionFactory.getCurrentSession();
-		session.beginTransaction();
-		String hql = "from Apartment as apartment where apartment.manager = :manager";
-		List<Apartment> apartments = (List<Apartment>) session.createQuery(hql).setParameter("manager", ea).list();
-		Set<Apartment> apartmentSet = new HashSet<>(apartments);
-		session.getTransaction().commit();
-		return apartmentSet;
-
-		/*doesnt work
 		Set<Apartment> apartments = new HashSet<>();
 		for (Estate estate : ea.getEstates()) {
 			if (estate instanceof Apartment) {
 				apartments.add((Apartment) estate);
 			}
 		}
-		return apartments*/
+		return apartments;
 	}
 	
 	/**
