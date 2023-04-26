@@ -10,20 +10,18 @@
         <property name="date" type="date" column="date" />
         <property name="place" type="string" column="place" />
         <property name="id" type="integer" column="id" />
-        <many-to-one name="contractPartner" class="de.dis2023.data.Person" column="contractPartner" not-null="true" />
+        <many-to-one name="contractPartner" class="de.dis2023.data.Person" column="contractPartner" not-null="true" lazy="false" />
 
         <union-subclass name="de.dis2023.data.PurchaseContract" table="purchasecontract">
             <property name="noOfInstallments" type="integer" column="noOfInstallments" />
             <property name="intrestRate" type="integer" column="intrestRate" />
-            <many-to-one name="House" class="de.dis2023.data.House" column="house_id" unique="true" not-null="true" />
-            <!--<one-to-one name="house" foreign-key="id" class="de.dis2023.data.House"/>-->
+            <many-to-one name="House" class="de.dis2023.data.House" column="house_id" unique="true" not-null="true" lazy="false"/>
         </union-subclass>
 
         <union-subclass name="de.dis2023.data.TenancyContract" table="tenancycontract">
             <property name="startDate" type="date" column="startDate" />
             <property name="duration" type="integer" column="duration" />
             <property name="additionalCosts" type="integer" column="additionalCosts" />
-            <!--<one-to-one name="apartment" foreign-key="id" class="de.dis2023.data.Apartment" />-->
             <many-to-one name="Apartment" class="de.dis2023.data.Apartment" column="apartment_id" unique="true" not-null="true" />
         </union-subclass>
     </class>
